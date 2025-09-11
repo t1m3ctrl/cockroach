@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Курсы для выпадающего списка -->
+    <string-array name="courses">
+        <item>1 курс</item>
+        <item>2 курс</item>
+        <item>3 курс</item>
+        <item>4 курс</item>
+        <item>5 курс</item>
+        <item>6 курс</item>
+    </string-array>
+
+    <!-- Уровни сложности -->
+    <string-array name="difficulty_levels">
+        <item>Легкий</item>
+        <item>Средний</item>
+        <item>Сложный</item>
+        <item>Эксперт</item>
+    </string-array>
+</resources>

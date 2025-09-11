@@ -1,3 +1,40 @@
 <resources>
     <string name="app_name">cockroach</string>
+
+    <!-- Регистрационная форма -->
+    <string name="registration_title">Регистрация игрока</string>
+    <string name="full_name_hint">Введите ФИО</string>
+    <string name="full_name_label">ФИО</string>
+    <string name="gender_label">Пол</string>
+    <string name="gender_male">Мужской</string>
+    <string name="gender_female">Женский</string>
+    <string name="course_label">Курс</string>
+    <string name="difficulty_label">Уровень сложности</string>
+    <string name="birth_date_label">Дата рождения</string>
+    <string name="zodiac_sign_label">Знак зодиака</string>
+    <string name="submit_button">Подтвердить</string>
+    <string name="clear_button">Очистить</string>
+    <string name="back_button">Назад</string>
+
+    <!-- Результат -->
+    <string name="result_title">Данные игрока</string>
+
+    <!-- Ошибки -->
+    <string name="error_empty_name">Введите ФИО</string>
+    <string name="error_select_gender">Выберите пол</string>
+    <string name="error_select_date">Выберите дату рождения</string>
+
+    <!-- Знаки зодиака -->
+    <string name="aries">Овен</string>
+    <string name="taurus">Телец</string>
+    <string name="gemini">Близнецы</string>
+    <string name="cancer">Рак</string>
+    <string name="leo">Лев</string>
+    <string name="virgo">Дева</string>
+    <string name="libra">Весы</string>
+    <string name="scorpio">Скорпион</string>
+    <string name="sagittarius">Стрелец</string>
+    <string name="capricorn">Козерог</string>
+    <string name="aquarius">Водолей</string>
+    <string name="pisces">Рыбы</string>
 </resources>

@@ -31,18 +31,4 @@ object ZodiacCalc {
             else -> null
         }
     }
-
-    /**
-     * Возвращает список всех курсов (1-6)
-     */
-    fun getCoursesList(): List<String> {
-        return (1..6).map { "Курс $it" }
-    }
-
-    /**
-     * Возвращает список уровней сложности для отображения
-     */
-    fun getDifficultyLevels(): List<String> {
-        return listOf("Легкий", "Средний", "Сложный", "Эксперт")
-    }
 }

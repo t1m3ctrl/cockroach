@@ -36,7 +36,7 @@ fun RegistrationScreen(
 ) {
     val playerData by viewModel.playerData
     val showResult by viewModel.showResult
-    val context = LocalContext.current
+//    val context = LocalContext.current
 
     // Состояние для выпадающего списка курсов
     var expandedCourses by remember { mutableStateOf(false) }
@@ -283,38 +283,44 @@ fun RegistrationScreen(
 
             // Знак зодиака
             if (playerData.zodiacSign != null) {
-                Card(
+                Card (
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                     colors = CardDefaults.cardColors(
                         containerColor = MaterialTheme.colorScheme.primaryContainer
                     )
                 ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Text(
-                            text = stringResource(R.string.zodiac_sign_label),
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer,
-                            modifier = Modifier.padding(bottom = 8.dp)
-                        )
+                        Column(
+                            modifier = Modifier.padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = stringResource(R.string.zodiac_sign_label),
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
 
-                        // Иконка знака зодиака
-                        Text(
-                            text = getZodiacIcon(playerData.zodiacSign!!),
-                            style = MaterialTheme.typography.displaySmall,
-                            modifier = Modifier.padding(8.dp)
-                        )
+                            // Иконка знака зодиака
+                            Text(
+                                text = getZodiacIcon(playerData.zodiacSign!!),
+                                style = MaterialTheme.typography.displaySmall,
+                                modifier = Modifier.padding(8.dp)
+                            )
 
-                        Text(
-                            text = playerData.zodiacSign!!.displayName,
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onPrimaryContainer
-                        )
+                            Text(
+                                text = playerData.zodiacSign!!.displayName,
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Medium,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer
+                            )
+                        }
                     }
                 }
             }
@@ -471,30 +477,37 @@ fun ResultScreen(
                     containerColor = MaterialTheme.colorScheme.primaryContainer
                 )
             ) {
-                Column(
-                    modifier = Modifier.padding(20.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Text(
-                        text = "Ваш знак зодиака",
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                Box (
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                )
+                {
+                    Column(
+                        modifier = Modifier.padding(20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        Text(
+                            text = "Ваш знак зодиака",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
 
-                    Text(
-                        text = getZodiacIcon(playerData.zodiacSign),
-                        style = MaterialTheme.typography.displayLarge,
-                        modifier = Modifier.padding(vertical = 8.dp)
-                    )
+                        Text(
+                            text = getZodiacIcon(playerData.zodiacSign),
+                            style = MaterialTheme.typography.displayLarge,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
 
-                    Text(
-                        text = playerData.zodiacSign.displayName,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                        Text(
+                            text = playerData.zodiacSign.displayName,
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
                 }
             }
         }

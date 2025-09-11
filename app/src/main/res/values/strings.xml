@@ -12,7 +12,7 @@
     <string name="difficulty_label">Уровень сложности</string>
     <string name="birth_date_label">Дата рождения</string>
     <string name="zodiac_sign_label">Знак зодиака</string>
-    <string name="submit_button">Зарегистрироваться</string>
+    <string name="submit_button">Подтвердить</string>
     <string name="clear_button">Очистить</string>
     <string name="back_button">Назад</string>
 

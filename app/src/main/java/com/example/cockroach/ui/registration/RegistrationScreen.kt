@@ -1,16 +1,17 @@
 package com.example.cockroach.ui.registration
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -223,6 +224,16 @@ fun RegistrationScreen(
                             4 -> 3f
                             else -> 0f
                         },
+                        thumb = {
+                            Box(
+                                modifier = Modifier
+                                    .size(24.dp) // размер "шарика"
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = CircleShape
+                                    )
+                            )
+                        },
                         onValueChange = { viewModel.updateDifficultyLevel(it) },
                         valueRange = 0f..3f,
                         steps = 2, // 4 значения: 0, 1, 2, 3
@@ -391,7 +402,7 @@ fun RegistrationScreen(
  */
 @Composable
 fun ResultScreen(
-    playerData: com.example.cockroach.data.model.PlayerData,
+    playerData: com.example.cockroach.data.model.Player,
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {

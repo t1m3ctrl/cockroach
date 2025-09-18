@@ -5,15 +5,15 @@ import androidx.compose.runtime.State
 import androidx.lifecycle.ViewModel
 import com.example.cockroach.data.model.DifficultyLevel
 import com.example.cockroach.data.model.Gender
-import com.example.cockroach.data.model.PlayerData
+import com.example.cockroach.data.model.Player
 import com.example.cockroach.domain.utils.ZodiacCalc
 import java.util.Date
 
 class RegistrationViewModel : ViewModel() {
     // Приватное изменяемое состояние
-    private val _playerData = mutableStateOf(PlayerData())
+    private val _player = mutableStateOf(Player())
     // Публичное неизменяемое состояние для UI
-    val playerData: State<PlayerData> = _playerData
+    val playerData: State<Player> = _player
 
     // Состояние для отображения результата
     private val _showResult = mutableStateOf(false)
@@ -23,21 +23,21 @@ class RegistrationViewModel : ViewModel() {
      * Обновляет ФИО игрока
      */
     fun updateFullName(fullName: String) {
-        _playerData.value = _playerData.value.copy(fullName = fullName)
+        _player.value = _player.value.copy(fullName = fullName)
     }
 
     /**
      * Обновляет пол игрока
      */
     fun updateGender(gender: Gender) {
-        _playerData.value = _playerData.value.copy(gender = gender)
+        _player.value = _player.value.copy(gender = gender)
     }
 
     /**
      * Обновляет курс игрока (1-6)
      */
     fun updateCourse(courseIndex: Int) {
-        _playerData.value = _playerData.value.copy(course = courseIndex + 1) // +1 потому что индекс начинается с 0
+        _player.value = _player.value.copy(course = courseIndex + 1) // +1 потому что индекс начинается с 0
     }
 
     /**
@@ -51,7 +51,7 @@ class RegistrationViewModel : ViewModel() {
             3 -> DifficultyLevel.EXPERT
             else -> DifficultyLevel.EASY
         }
-        _playerData.value = _playerData.value.copy(difficultyLevel = difficultyLevel)
+        _player.value = _player.value.copy(difficultyLevel = difficultyLevel)
     }
 
     /**
@@ -59,7 +59,7 @@ class RegistrationViewModel : ViewModel() {
      */
     fun updateBirthDate(birthDate: Date) {
         val zodiacSign = ZodiacCalc.calculateZodiacSign(birthDate)
-        _playerData.value = _playerData.value.copy(
+        _player.value = _player.value.copy(
             birthDate = birthDate,
             zodiacSign = zodiacSign
         )
@@ -69,7 +69,7 @@ class RegistrationViewModel : ViewModel() {
      * Показывает результат регистрации
      */
     fun showPlayerData() {
-        if (_playerData.value.isValid()) {
+        if (_player.value.isValid()) {
             _showResult.value = true
         }
     }
@@ -85,7 +85,7 @@ class RegistrationViewModel : ViewModel() {
      * Очищает все данные формы
      */
     fun clearData() {
-        _playerData.value = PlayerData()
+        _player.value = Player()
         _showResult.value = false
     }
 
@@ -93,13 +93,13 @@ class RegistrationViewModel : ViewModel() {
      * Возвращает текст для отображения уровня сложности
      */
     fun getDifficultyText(): String {
-        return _playerData.value.difficultyLevel.displayName
+        return _player.value.difficultyLevel.displayName
     }
 
     /**
      * Проверяет, можно ли отправить форму
      */
     fun canSubmit(): Boolean {
-        return _playerData.value.isValid()
+        return _player.value.isValid()
     }
 }

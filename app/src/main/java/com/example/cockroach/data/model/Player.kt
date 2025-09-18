@@ -2,34 +2,7 @@ package com.example.cockroach.data.model
 
 import java.util.Date
 
-enum class Gender(val displayName: String) {
-    MALE("Мужской"),
-    FEMALE("Женский")
-}
-
-enum class ZodiacSign(val displayName: String, val iconName: String) {
-    ARIES("Овен", "aries"),
-    TAURUS("Телец", "taurus"),
-    GEMINI("Близнецы", "gemini"),
-    CANCER("Рак", "cancer"),
-    LEO("Лев", "leo"),
-    VIRGO("Дева", "virgo"),
-    LIBRA("Весы", "libra"),
-    SCORPIO("Скорпион", "scorpio"),
-    SAGITTARIUS("Стрелец", "sagittarius"),
-    CAPRICORN("Козерог", "capricorn"),
-    AQUARIUS("Водолей", "aquarius"),
-    PISCES("Рыбы", "pisces")
-}
-
-enum class DifficultyLevel(val displayName: String, val value: Int) {
-    EASY("Легкий", 1),
-    MEDIUM("Средний", 2),
-    HARD("Сложный", 3),
-    EXPERT("Эксперт", 4)
-}
-
-data class PlayerData(
+data class Player(
     val fullName: String = "",
     val gender: Gender? = null,
     val course: Int = 1,
@@ -62,3 +35,31 @@ data class PlayerData(
         }
     }
 }
+
+enum class Gender(val displayName: String) {
+    MALE("Мужской"),
+    FEMALE("Женский")
+}
+
+enum class ZodiacSign(val displayName: String, val iconName: String) {
+    ARIES("Овен", "aries"),
+    TAURUS("Телец", "taurus"),
+    GEMINI("Близнецы", "gemini"),
+    CANCER("Рак", "cancer"),
+    LEO("Лев", "leo"),
+    VIRGO("Дева", "virgo"),
+    LIBRA("Весы", "libra"),
+    SCORPIO("Скорпион", "scorpio"),
+    SAGITTARIUS("Стрелец", "sagittarius"),
+    CAPRICORN("Козерог", "capricorn"),
+    AQUARIUS("Водолей", "aquarius"),
+    PISCES("Рыбы", "pisces")
+}
+
+enum class DifficultyLevel(val displayName: String, val value: Int) {
+    EASY("Легкий", 1),
+    MEDIUM("Средний", 2),
+    HARD("Сложный", 3),
+    EXPERT("Эксперт", 4)
+}
+

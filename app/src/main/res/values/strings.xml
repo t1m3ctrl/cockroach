@@ -37,4 +37,20 @@
     <string name="capricorn">Козерог</string>
     <string name="aquarius">Водолей</string>
     <string name="pisces">Рыбы</string>
+
+    <!-- Правила игры -->
+    <string name="rules_title">Правила игры</string>
+
+    <!-- Авторы -->
+    <string name="authors_title">Авторы проекта</string>
+
+    <!-- Настройки -->
+    <string name="game_settings_title">Настройки игры</string>
+    <string name="speed_game">Скорость игры</string>
+    <string name="max_cockroaches">Максимальное количество тараканов</string>
+    <string name="bonus_interval">Интервал появления бонусов</string>
+    <string name="round_duration">Длительность раунда</string>
+    <string name="reset">Сбросить</string>
+    <string name="save">Сохранить</string>
+
 </resources>

@@ -31,7 +31,10 @@ import com.example.cockroach.data.model.GameSettings
 
 //@SuppressLint("DefaultLocale")
 @Composable
-fun GameSettingsScreen(modifier: Modifier = Modifier) {
+fun GameSettingsScreen(
+    modifier: Modifier = Modifier,
+    onSettingsChanged: (GameSettings) -> Unit = {}
+) {
     var settings by remember { mutableStateOf(GameSettings()) }
 
     LazyColumn(
@@ -114,11 +117,11 @@ fun GameSettingsScreen(modifier: Modifier = Modifier) {
 
                 Button(
                     onClick = {
-                        // TODO: Сохранить настройки
+                        onSettingsChanged(settings)
                     },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text(stringResource(R.string.save))
+                    Text("Сохранить")
                 }
             }
         }

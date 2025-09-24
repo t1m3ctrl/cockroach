@@ -14,16 +14,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.example.cockroach.ui.authors.AuthorsScreen
+import com.example.cockroach.ui.game.GameScreen
 import com.example.cockroach.ui.gamerules.GameRulesScreen
 import com.example.cockroach.ui.registration.RegistrationScreen
 import com.example.cockroach.ui.settings.GameSettingsScreen
 import com.example.cockroach.ui.theme.CockroachTheme
+import com.example.cockroach.data.model.GameSettings
 
 /**
  * Главная Activity приложения
@@ -49,8 +52,9 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MainScreenWithTabs(modifier: Modifier = Modifier) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
+    var gameSettings by remember { mutableStateOf(GameSettings()) }
 
-    val tabs = listOf("Регистрация", "Правила игры", "Авторы", "Настройки")
+    val tabs = listOf("Регистрация", "Игра", "Правила игры", "Авторы", "Настройки")
 
     Column(modifier = modifier.fillMaxSize()) {
         TabRow(selectedTabIndex = selectedTabIndex) {
@@ -72,9 +76,14 @@ fun MainScreenWithTabs(modifier: Modifier = Modifier) {
 
         when (selectedTabIndex) {
             0 -> RegistrationScreen()
-            1 -> GameRulesScreen()
-            2 -> AuthorsScreen()
-            3 -> GameSettingsScreen()
+            1 -> GameScreen(gameSettings = gameSettings)
+            2 -> GameRulesScreen()
+            3 -> AuthorsScreen()
+            4 -> GameSettingsScreen(
+                onSettingsChanged = { settings ->
+                    gameSettings = settings
+                }
+            )
         }
     }
 }

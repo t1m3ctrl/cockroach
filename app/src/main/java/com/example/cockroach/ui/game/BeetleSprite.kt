@@ -1,5 +1,6 @@
 package com.example.cockroach.ui.game
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -7,19 +8,16 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.example.cockroach.data.model.Beetle
 
+@SuppressLint("DiscouragedApi")
 @Composable
 fun BeetleSprite(
     beetle: Beetle,
@@ -58,10 +56,10 @@ private fun DrawScope.drawBeetleFrame(bitmap: ImageBitmap, frame: Int) {
 
     val srcX = (frame % 12) * frameWidth
 
-    val srcRect = Rect(
-        offset = Offset(srcX, 0f),
-        size = androidx.compose.ui.geometry.Size(frameWidth, frameHeight)
-    )
+//    val srcRect = Rect(
+//        offset = Offset(srcX, 0f),
+//        size = androidx.compose.ui.geometry.Size(frameWidth, frameHeight)
+//    )
 
     drawImage(
         image = bitmap,

@@ -30,6 +30,7 @@ import com.example.cockroach.data.model.GameSettings
 
 
 //@SuppressLint("DefaultLocale")
+@SuppressLint("DefaultLocale")
 @Composable
 fun GameSettingsScreen(
     modifier: Modifier = Modifier,

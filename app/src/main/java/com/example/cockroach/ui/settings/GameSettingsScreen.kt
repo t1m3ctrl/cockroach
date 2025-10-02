@@ -1,16 +1,20 @@
 package com.example.cockroach.ui.settings
 
-import android.annotation.SuppressLint
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
@@ -27,10 +31,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.cockroach.R
 import com.example.cockroach.data.model.GameSettings
+import java.util.Locale
 
-
-//@SuppressLint("DefaultLocale")
-@SuppressLint("DefaultLocale")
 @Composable
 fun GameSettingsScreen(
     modifier: Modifier = Modifier,
@@ -61,7 +63,7 @@ fun GameSettingsScreen(
                 value = settings.gameSpeed,
                 valueRange = 0.5f..3.0f,
                 onValueChange = { settings = settings.copy(gameSpeed = it) },
-                valueFormatter = { "${String.format("%.1f", it)}x" },
+                valueFormatter = { "${String.format(Locale.US, "%.1f", it)}x" },
                 steps = 4
             )
         }
@@ -133,15 +135,16 @@ fun GameSettingsScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingSlider(
+    modifier: Modifier = Modifier,
     title: String,
     value: Float,
     valueRange: ClosedFloatingPointRange<Float>,
     onValueChange: (Float) -> Unit,
     valueFormatter: (Float) -> String,
     steps: Int = 0,
-    @SuppressLint("ModifierParameter") modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -188,6 +191,16 @@ fun SettingSlider(
                 onValueChange = onValueChange,
                 valueRange = valueRange,
                 steps = steps,
+                thumb = {
+                    Box(
+                        modifier = Modifier
+                            .size(24.dp) // размер "шарика"
+                            .background(
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = CircleShape
+                            )
+                    )
+                },
                 modifier = Modifier.fillMaxWidth()
             )
 

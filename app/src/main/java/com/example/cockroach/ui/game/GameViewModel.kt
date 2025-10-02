@@ -17,6 +17,8 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
+const val deltaTime = 0.016f // 60 FPS
+
 class GameViewModel : ViewModel() {
     // gameState с приватным сеттером (можно устанавливать только тут)
     var gameState by mutableStateOf(GameState())
@@ -36,8 +38,7 @@ class GameViewModel : ViewModel() {
         gameJob = viewModelScope.launch {
             while (isActive && gameState.isGameRunning && gameState.timeRemaining > 0) {
                 if (gameState.isActive) {
-                    val deltaTime = 0.016f // 60 FPS
-                    updateGame(deltaTime)
+                    updateGame()
                 }
                 delay(16)
             }
@@ -74,8 +75,8 @@ class GameViewModel : ViewModel() {
 
         val hitBeetle = gameState.beetles.find { it.isClicked(position) && it.isAlive }
 
-        if (hitBeetle != null) {
-            gameState = gameState.copy(
+        gameState = if (hitBeetle != null) {
+            gameState.copy(
                 beetles = gameState.beetles.map {
                     if (it.id == hitBeetle.id) it.copy(isAlive = false) else it
                 },
@@ -83,14 +84,14 @@ class GameViewModel : ViewModel() {
                 hitCount = gameState.hitCount + 1
             )
         } else {
-            gameState = gameState.copy(
+            gameState.copy(
                 missCount = gameState.missCount + 1,
                 score = maxOf(0, gameState.score - 5)
             )
         }
     }
 
-    private fun updateGame(deltaTime: Float) {
+    private fun updateGame() {
         val currentTime = System.currentTimeMillis()
 
         // Обновление позиций жуков

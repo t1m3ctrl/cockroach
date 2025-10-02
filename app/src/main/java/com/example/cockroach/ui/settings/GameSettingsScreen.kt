@@ -33,8 +33,8 @@ import com.example.cockroach.data.model.GameSettings
 @SuppressLint("DefaultLocale")
 @Composable
 fun GameSettingsScreen(
-    currentSettings: GameSettings = GameSettings(),
     modifier: Modifier = Modifier,
+    currentSettings: GameSettings = GameSettings(),
     onSettingsChanged: (GameSettings) -> Unit = {}
 ) {
     var settings by remember(currentSettings) { mutableStateOf(currentSettings) }

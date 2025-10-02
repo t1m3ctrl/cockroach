@@ -4,10 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.SystemBarStyle
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -28,6 +25,8 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.cockroach.data.model.GameSettings
 import com.example.cockroach.ui.authors.AuthorsScreen
 import com.example.cockroach.ui.game.GameScreen
 import com.example.cockroach.ui.game.GameViewModel
@@ -35,10 +34,7 @@ import com.example.cockroach.ui.gamerules.GameRulesScreen
 import com.example.cockroach.ui.registration.RegistrationScreen
 import com.example.cockroach.ui.settings.GameSettingsScreen
 import com.example.cockroach.ui.theme.CockroachTheme
-import com.example.cockroach.data.model.GameSettings
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cockroach.ui.theme.Green40
-import com.example.cockroach.ui.theme.Green80
 
 /**
  * Главная Activity приложения

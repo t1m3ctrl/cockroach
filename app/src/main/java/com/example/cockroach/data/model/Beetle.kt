@@ -10,6 +10,7 @@ data class Beetle(
     val position: Offset,
     val direction: Offset,
     val animationFrame: Int = 0,
+    val animationProgress: Float = 0f,
     val isAlive: Boolean = true,
     val createdAt: Long = System.currentTimeMillis()
 ) {
@@ -26,9 +27,13 @@ data class Beetle(
         return if (isOutOfBounds) {
             copy(isAlive = false)
         } else {
+            val newProgress = animationProgress + 0.5f
+            val newFrame = newProgress.toInt() % 12
+
             copy(
                 position = Offset(newX, newY),
-                animationFrame = (animationFrame + 1) % 12
+                animationFrame = newFrame,
+                animationProgress = newProgress
             )
         }
     }

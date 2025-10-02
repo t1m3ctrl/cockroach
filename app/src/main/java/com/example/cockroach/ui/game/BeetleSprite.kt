@@ -1,6 +1,5 @@
 package com.example.cockroach.ui.game
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,7 +16,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import com.example.cockroach.data.model.Beetle
 
-@SuppressLint("DiscouragedApi")
 @Composable
 fun BeetleSprite(
     beetle: Beetle,
@@ -34,18 +32,10 @@ fun BeetleSprite(
                 indication = null
             ) { onClick() }
     ) {
-        val resourceId = context.resources.getIdentifier(
-            beetle.type.spriteResource,
-            "drawable",
-            context.packageName
-        )
+        val drawable = context.resources.getDrawable(beetle.type.spriteResourceId, null)
+        val bitmap = drawable.toBitmap(768, 80).asImageBitmap()
 
-        if (resourceId != 0) {
-            val drawable = context.resources.getDrawable(resourceId, null)
-            val bitmap = drawable.toBitmap(768, 80).asImageBitmap()
-
-            drawBeetleFrame(bitmap, beetle.animationFrame)
-        }
+        drawBeetleFrame(bitmap, beetle.animationFrame)
     }
 }
 
@@ -55,11 +45,6 @@ private fun DrawScope.drawBeetleFrame(bitmap: ImageBitmap, frame: Int) {
     val scale = 2f
 
     val srcX = (frame % 12) * frameWidth
-
-//    val srcRect = Rect(
-//        offset = Offset(srcX, 0f),
-//        size = androidx.compose.ui.geometry.Size(frameWidth, frameHeight)
-//    )
 
     drawImage(
         image = bitmap,

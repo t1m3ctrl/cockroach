@@ -18,6 +18,7 @@ import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 class GameViewModel : ViewModel() {
+    // gameState с приватным сеттером (можно устанавливать только тут)
     var gameState by mutableStateOf(GameState())
         private set
 
@@ -34,17 +35,34 @@ class GameViewModel : ViewModel() {
         gameJob?.cancel()
         gameJob = viewModelScope.launch {
             while (isActive && gameState.isGameRunning && gameState.timeRemaining > 0) {
-                val deltaTime = 0.016f // 60 FPS
-                updateGame(deltaTime)
+                if (gameState.isActive) {
+                    val deltaTime = 0.016f // 60 FPS
+                    updateGame(deltaTime)
+                }
                 delay(16)
             }
-            endGame()
+            if (gameState.timeRemaining <= 0) {
+                endGame()
+            }
         }
     }
 
-    fun stopGame() {
-        gameJob?.cancel()
-        gameState = gameState.copy(isGameRunning = false)
+    fun pauseGame() {
+        if (gameState.isGameRunning) {
+            gameState = gameState.copy(isPaused = true)
+        }
+    }
+
+    fun resumeGame() {
+        if (gameState.isGameRunning) {
+            gameState = gameState.copy(isPaused = false)
+        }
+    }
+
+    fun togglePause() {
+        if (gameState.isGameRunning) {
+            gameState = gameState.copy(isPaused = !gameState.isPaused)
+        }
     }
 
     fun setScreenSize(size: IntSize) {
@@ -52,7 +70,7 @@ class GameViewModel : ViewModel() {
     }
 
     fun onScreenClick(position: Offset) {
-        if (!gameState.isGameRunning) return
+        if (!gameState.isActive) return
 
         val hitBeetle = gameState.beetles.find { it.isClicked(position) && it.isAlive }
 
@@ -65,7 +83,10 @@ class GameViewModel : ViewModel() {
                 hitCount = gameState.hitCount + 1
             )
         } else {
-            gameState = gameState.copy(missCount = gameState.missCount + 1)
+            gameState = gameState.copy(
+                missCount = gameState.missCount + 1,
+                score = maxOf(0, gameState.score - 5)
+            )
         }
     }
 
@@ -74,7 +95,7 @@ class GameViewModel : ViewModel() {
 
         // Обновление позиций жуков
         val updatedBeetles = gameState.beetles.map {
-            it.updatePosition(deltaTime, screenSize)
+            it.updatePosition(deltaTime, screenSize, gameState.gameSettings.gameSpeed)
         }.filter { it.isAlive }
 
         // Спавн новых жуков

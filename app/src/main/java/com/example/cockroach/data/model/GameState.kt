@@ -6,10 +6,12 @@ data class GameState(
     val hitCount: Int = 0,
     val missCount: Int = 0,
     val isGameRunning: Boolean = false,
+    val isPaused: Boolean = false,
     val timeRemaining: Float = 0f,
     val lastBeetleSpawn: Long = 0L,
     val gameSettings: GameSettings = GameSettings()
 ) {
     val totalClicks: Int get() = hitCount + missCount
     val accuracy: Float get() = if (totalClicks > 0) hitCount.toFloat() / totalClicks else 0f
+    val isActive: Boolean get() = isGameRunning && !isPaused
 }

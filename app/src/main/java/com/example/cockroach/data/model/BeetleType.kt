@@ -23,6 +23,7 @@ object BeetleTypes {
         color = Color.Blue
     )
 
+
     val COMMON_SUN = BeetleType(
         id = "beetle_common_sun",
         name = "Солнечный жук",

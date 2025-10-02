@@ -33,10 +33,11 @@ import com.example.cockroach.data.model.GameSettings
 @SuppressLint("DefaultLocale")
 @Composable
 fun GameSettingsScreen(
+    currentSettings: GameSettings = GameSettings(),
     modifier: Modifier = Modifier,
     onSettingsChanged: (GameSettings) -> Unit = {}
 ) {
-    var settings by remember { mutableStateOf(GameSettings()) }
+    var settings by remember(currentSettings) { mutableStateOf(currentSettings) }
 
     LazyColumn(
         modifier = modifier
@@ -110,7 +111,10 @@ fun GameSettingsScreen(
                 horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 OutlinedButton(
-                    onClick = { settings = GameSettings() },
+                    onClick = {
+                        settings = GameSettings()
+                        onSettingsChanged(GameSettings())
+                    },
                     modifier = Modifier.weight(1f)
                 ) {
                     Text(stringResource(R.string.reset))
@@ -141,7 +145,10 @@ fun SettingSlider(
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        )
     ) {
         Column(
             modifier = Modifier

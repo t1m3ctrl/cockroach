@@ -12,6 +12,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cockroach.R
 import com.example.cockroach.data.model.Gender
+import com.example.cockroach.ui.theme.LightGreen80
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -86,7 +88,10 @@ fun RegistrationScreen(
             // Пол (RadioButton)
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
             ) {
                 Column(
                     modifier = Modifier
@@ -173,7 +178,8 @@ fun RegistrationScreen(
 
                 ExposedDropdownMenu(
                     expanded = expandedCourses,
-                    onDismissRequest = { expandedCourses = false }
+                    onDismissRequest = { expandedCourses = false },
+                    modifier = Modifier.background(LightGreen80)
                 ) {
                     (1..6).forEach { course ->
                         DropdownMenuItem(
@@ -181,6 +187,7 @@ fun RegistrationScreen(
                                 Text(
                                     text = "$course курс",
                                     style = MaterialTheme.typography.bodyLarge
+
                                 )
                             },
                             onClick = {
@@ -195,7 +202,10 @@ fun RegistrationScreen(
             // Уровень сложности (SeekBar/Slider)
             Card(
                 modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer
+                )
             ) {
                 Column(
                     modifier = Modifier.padding(16.dp)
@@ -211,7 +221,7 @@ fun RegistrationScreen(
                     Text(
                         text = viewModel.getDifficultyText(),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.primary,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontWeight = FontWeight.Medium,
                         modifier = Modifier.padding(bottom = 12.dp)
                     )

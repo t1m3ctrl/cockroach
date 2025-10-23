@@ -56,13 +56,43 @@ fun GameSettingsScreen(
             )
         }
 
+        // Отображение текущего уровня сложности
+        item {
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer
+                )
+            ) {
+                Column(
+                    modifier = Modifier.padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        text = "Текущий уровень сложности:",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = settings.difficultyLevel.displayName,
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+            }
+        }
+
         // Скорость игры
         item {
             SettingSlider(
                 title = stringResource(R.string.speed_game),
                 value = settings.gameSpeed,
                 valueRange = 0.5f..3.0f,
-                onValueChange = { settings = settings.copy(gameSpeed = it) },
+                onValueChange = {
+                    settings = settings.copy(gameSpeed = it).withAutoCustomDifficulty()
+                },
                 valueFormatter = { "${String.format(Locale.US, "%.1f", it)}x" },
                 steps = 4
             )
@@ -74,7 +104,9 @@ fun GameSettingsScreen(
                 title = stringResource(R.string.max_cockroaches),
                 value = settings.maxCockroaches.toFloat(),
                 valueRange = 5f..20f,
-                onValueChange = { settings = settings.copy(maxCockroaches = it.toInt()) },
+                onValueChange = {
+                    settings = settings.copy(maxCockroaches = it.toInt()).withAutoCustomDifficulty()
+                },
                 valueFormatter = { "${it.toInt()} шт." },
                 steps = 14
             )
@@ -86,7 +118,9 @@ fun GameSettingsScreen(
                 title = stringResource(R.string.bonus_interval),
                 value = settings.bonusInterval.toFloat(),
                 valueRange = 5f..30f,
-                onValueChange = { settings = settings.copy(bonusInterval = it.toInt()) },
+                onValueChange = {
+                    settings = settings.copy(bonusInterval = it.toInt()).withAutoCustomDifficulty()
+                },
                 valueFormatter = { "${it.toInt()} сек." },
                 steps = 24
             )
@@ -98,7 +132,9 @@ fun GameSettingsScreen(
                 title = stringResource(R.string.round_duration),
                 value = settings.roundDuration.toFloat(),
                 valueRange = 30f..180f,
-                onValueChange = { settings = settings.copy(roundDuration = it.toInt()) },
+                onValueChange = {
+                    settings = settings.copy(roundDuration = it.toInt()).withAutoCustomDifficulty()
+                },
                 valueFormatter = { "${it.toInt()} сек." },
                 steps = 29
             )

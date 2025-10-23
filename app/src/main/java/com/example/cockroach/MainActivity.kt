@@ -12,7 +12,9 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -30,7 +32,9 @@ import com.example.cockroach.ui.authors.AuthorsScreen
 import com.example.cockroach.ui.game.GameScreen
 import com.example.cockroach.ui.game.GameViewModel
 import com.example.cockroach.ui.gamerules.GameRulesScreen
+import com.example.cockroach.ui.records.RecordsScreen
 import com.example.cockroach.ui.registration.RegistrationScreen
+import com.example.cockroach.ui.registration.RegistrationViewModel
 import com.example.cockroach.ui.settings.GameSettingsScreen
 import com.example.cockroach.ui.theme.CockroachTheme
 import com.example.cockroach.ui.theme.Green40
@@ -65,9 +69,25 @@ fun MainScreenWithTabs(modifier: Modifier = Modifier) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var gameSettings by remember { mutableStateOf(GameSettings()) }
     val gameViewModel: GameViewModel = viewModel()
+    val registrationViewModel: RegistrationViewModel = viewModel()
 
-//    val tabs = listOf("Регистрация", "Игра", "Правила игры", "Авторы", "Настройки")
-    val tabs = listOf("\uD83D\uDC64", "\uD83C\uDFAE", "\uD83D\uDCCB", "\uD83D\uDC65", "⚙")
+    // Получаем текущего игрока из RegistrationViewModel
+    val currentPlayer by registrationViewModel.currentPlayer.collectAsState()
+
+//    val tabs = listOf("Регистрация", "Игра", "Правила игры", "Рекорды", "Авторы", "Настройки")
+    val tabs = listOf("\uD83D\uDC64", "\uD83C\uDFAE", "\uD83D\uDCCB", "\uD83C\uDFC6", "\uD83D\uDC65", "⚙")
+
+    // Передаем текущего игрока в GameViewModel и обновляем настройки при смене игрока
+    LaunchedEffect(currentPlayer) {
+        gameViewModel.setCurrentPlayer(currentPlayer)
+        // Обновляем настройки игры в соответствии с уровнем сложности игрока
+        currentPlayer?.let { player ->
+            gameSettings = player.difficultyLevel.toGameSettings()
+        } ?: run {
+            // Если игрок не выбран, используем настройки по умолчанию
+            gameSettings = GameSettings()
+        }
+    }
 
     // Автоматическая пауза при смене вкладки
     LaunchedEffect(selectedTabIndex) {
@@ -97,19 +117,22 @@ fun MainScreenWithTabs(modifier: Modifier = Modifier) {
         }
 
         when (selectedTabIndex) {
-            0 -> RegistrationScreen()
+            0 -> RegistrationScreen(viewModel = registrationViewModel)
             1 -> GameScreen(
                 gameSettings = gameSettings,
                 viewModel = gameViewModel
             )
             2 -> GameRulesScreen()
-            3 -> AuthorsScreen()
-            4 -> GameSettingsScreen(
-                currentSettings = gameSettings,
-                onSettingsChanged = { settings ->
-                    gameSettings = settings
-                }
-            )
+            3 -> RecordsScreen()
+            4 -> AuthorsScreen()
+            5 -> key(currentPlayer?.id ?: 0L) { // Принудительная рекомпозиция при смене игрока
+                GameSettingsScreen(
+                    currentSettings = gameSettings,
+                    onSettingsChanged = { settings ->
+                        gameSettings = settings
+                    }
+                )
+            }
         }
     }
 }

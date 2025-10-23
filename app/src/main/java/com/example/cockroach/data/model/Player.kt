@@ -1,14 +1,23 @@
 package com.example.cockroach.data.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.example.cockroach.data.database.Converters
 import java.util.Date
 
+@Entity(tableName = "players")
+@TypeConverters(Converters::class)
 data class Player(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
     val fullName: String = "",
     val gender: Gender? = null,
     val course: Int = 1,
     val difficultyLevel: DifficultyLevel = DifficultyLevel.EASY,
     val birthDate: Date? = null,
-    val zodiacSign: ZodiacSign? = null
+    val zodiacSign: ZodiacSign? = null,
+    val createdAt: Long = System.currentTimeMillis()
 ) {
     /**
      * Проверяет, заполнены ли все обязательные поля
@@ -19,21 +28,6 @@ data class Player(
                 birthDate != null
     }
 
-    /**
-     * Возвращает строковое представление данных игрока
-     */
-    fun getDisplayText(): String {
-        return buildString {
-            appendLine("ФИО: $fullName")
-            appendLine("Пол: ${gender?.displayName ?: "Не указан"}")
-            appendLine("Курс: $course")
-            appendLine("Сложность: ${difficultyLevel.displayName}")
-            appendLine("Дата рождения: ${birthDate?.let {
-                java.text.SimpleDateFormat("dd.MM.yyyy", java.util.Locale.getDefault()).format(it)
-            } ?: "Не указана"}")
-            appendLine("Знак зодиака: ${zodiacSign?.displayName ?: "Не определен"}")
-        }
-    }
 }
 
 enum class Gender(val displayName: String) {
@@ -41,25 +35,39 @@ enum class Gender(val displayName: String) {
     FEMALE("Женский")
 }
 
-enum class ZodiacSign(val displayName: String, val iconName: String) {
-    ARIES("Овен", "aries"),
-    TAURUS("Телец", "taurus"),
-    GEMINI("Близнецы", "gemini"),
-    CANCER("Рак", "cancer"),
-    LEO("Лев", "leo"),
-    VIRGO("Дева", "virgo"),
-    LIBRA("Весы", "libra"),
-    SCORPIO("Скорпион", "scorpio"),
-    SAGITTARIUS("Стрелец", "sagittarius"),
-    CAPRICORN("Козерог", "capricorn"),
-    AQUARIUS("Водолей", "aquarius"),
-    PISCES("Рыбы", "pisces")
+enum class ZodiacSign(val displayName: String) {
+    ARIES("Овен"),
+    TAURUS("Телец"),
+    GEMINI("Близнецы"),
+    CANCER("Рак"),
+    LEO("Лев"),
+    VIRGO("Дева"),
+    LIBRA("Весы"),
+    SCORPIO("Скорпион"),
+    SAGITTARIUS("Стрелец"),
+    CAPRICORN("Козерог"),
+    AQUARIUS("Водолей"),
+    PISCES("Рыбы")
 }
 
 enum class DifficultyLevel(val displayName: String, val value: Int) {
     EASY("Легкий", 1),
     MEDIUM("Средний", 2),
     HARD("Сложный", 3),
-    EXPERT("Эксперт", 4)
+    EXPERT("Эксперт", 4),
+    CUSTOM("Пользовательский", 5);
+
+    /**
+     * Возвращает настройки игры для выбранного уровня сложности
+     */
+    fun toGameSettings(): GameSettings {
+        return when (this) {
+            EASY -> GameSettings(gameSpeed = 1.0f, maxCockroaches = 5, roundDuration = 60)
+            MEDIUM -> GameSettings(gameSpeed = 1.5f, maxCockroaches = 10, roundDuration = 60)
+            HARD -> GameSettings(gameSpeed = 2.0f, maxCockroaches = 15, roundDuration = 60)
+            EXPERT -> GameSettings(gameSpeed = 2.5f, maxCockroaches = 20, roundDuration = 60)
+            CUSTOM -> GameSettings() // Стандартные настройки для пользовательского режима
+        }
+    }
 }
 

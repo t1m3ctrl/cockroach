@@ -38,6 +38,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -72,6 +73,8 @@ fun RegistrationScreen(
 ) {
     val playerData by viewModel.playerData
     val showResult by viewModel.showResult
+    val allPlayers by viewModel.allPlayers.collectAsState()
+    val currentPlayer by viewModel.currentPlayer.collectAsState()
 //    val context = LocalContext.current
 
     // Состояние для выпадающего списка курсов
@@ -105,6 +108,75 @@ fun RegistrationScreen(
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colorScheme.primary
             )
+
+            // Выбор существующего игрока или создание нового
+            if (allPlayers.isNotEmpty()) {
+                var expandedPlayers by remember { mutableStateOf(false) }
+
+                Card(
+                    modifier = Modifier.fillMaxWidth(),
+                    elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer
+                    )
+                ) {
+                    Column(modifier = Modifier.padding(16.dp)) {
+                        Text(
+                            text = "Выбор игрока",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            ExposedDropdownMenuBox(
+                                expanded = expandedPlayers,
+                                onExpandedChange = { expandedPlayers = !expandedPlayers },
+                                modifier = Modifier.weight(1f)
+                            ) {
+                                OutlinedTextField(
+                                    value = currentPlayer?.fullName ?: "Новый игрок",
+                                    onValueChange = { },
+                                    readOnly = true,
+                                    label = { Text("Игрок") },
+                                    trailingIcon = {
+                                        ExposedDropdownMenuDefaults.TrailingIcon(expanded = expandedPlayers)
+                                    },
+                                    colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .menuAnchor(MenuAnchorType.PrimaryNotEditable)
+                                )
+
+                                ExposedDropdownMenu(
+                                    expanded = expandedPlayers,
+                                    onDismissRequest = { expandedPlayers = false }
+                                ) {
+                                    DropdownMenuItem(
+                                        text = { Text("➕ Новый игрок", fontWeight = FontWeight.Bold) },
+                                        onClick = {
+                                            viewModel.createNewPlayer()
+                                            expandedPlayers = false
+                                        }
+                                    )
+                                    allPlayers.forEach { player ->
+                                        DropdownMenuItem(
+                                            text = { Text(player.fullName) },
+                                            onClick = {
+                                                viewModel.selectPlayer(player)
+                                                expandedPlayers = false
+                                            }
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
 
             // ФИО
             OutlinedTextField(
@@ -265,6 +337,7 @@ fun RegistrationScreen(
                             2 -> 1f
                             3 -> 2f
                             4 -> 3f
+                            5 -> 4f
                             else -> 0f
                         },
                         thumb = {
@@ -278,8 +351,8 @@ fun RegistrationScreen(
                             )
                         },
                         onValueChange = { viewModel.updateDifficultyLevel(it) },
-                        valueRange = 0f..3f,
-                        steps = 2, // 4 значения: 0, 1, 2, 3
+                        valueRange = 0f..4f,
+                        steps = 3, // 5 значений: 0, 1, 2, 3, 4
                         modifier = Modifier.fillMaxWidth()
                     )
 
@@ -305,6 +378,11 @@ fun RegistrationScreen(
                         )
                         Text(
                             text = "Эксперт",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = "Свой",
                             style = MaterialTheme.typography.bodySmall,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
@@ -406,7 +484,7 @@ fun RegistrationScreen(
 
                 // Кнопка регистрации
                 Button(
-                    onClick = { viewModel.showPlayerData() },
+                    onClick = { viewModel.savePlayer() },
                     modifier = Modifier.weight(1f),
                     enabled = viewModel.canSubmit(),
                     colors = ButtonDefaults.buttonColors(
@@ -414,7 +492,7 @@ fun RegistrationScreen(
                     )
                 ) {
                     Text(
-                        text = stringResource(R.string.submit_button),
+                        text = if (currentPlayer != null) "Обновить" else stringResource(R.string.submit_button),
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.SemiBold
                     )

@@ -1,31 +1,57 @@
 package com.example.cockroach.ui.game
 
+import android.app.Application
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.IntSize
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.cockroach.data.database.AppDatabase
+import com.example.cockroach.data.database.GameRecordEntity
 import com.example.cockroach.data.model.Beetle
 import com.example.cockroach.data.model.BeetleTypes
 import com.example.cockroach.data.model.GameSettings
 import com.example.cockroach.data.model.GameState
+import com.example.cockroach.data.model.Player
+import com.example.cockroach.data.repository.GameRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 const val deltaTime = 0.016f // 60 FPS
 
-class GameViewModel : ViewModel() {
+class GameViewModel(application: Application) : AndroidViewModel(application) {
+    private val repository: GameRepository = GameRepository(AppDatabase.getDatabase(application))
+
     // gameState с приватным сеттером (можно устанавливать только тут)
     var gameState by mutableStateOf(GameState())
         private set
 
     private var gameJob: Job? = null
     private var screenSize = IntSize(800, 600)
+
+    // Текущий игрок
+    private val _currentPlayer = MutableStateFlow<Player?>(null)
+
+    // Установка текущего игрока
+    fun setCurrentPlayer(player: Player?) {
+        _currentPlayer.value = player
+        // Сброс состояния игры при смене игрока
+        resetGameState()
+    }
+
+    /**
+     * Сбрасывает состояние игры к начальному
+     */
+    fun resetGameState() {
+        gameJob?.cancel()
+        gameState = GameState()
+    }
 
     fun startGame(settings: GameSettings) {
         gameState = GameState(
@@ -145,5 +171,37 @@ class GameViewModel : ViewModel() {
 
     private fun endGame() {
         gameState = gameState.copy(isGameRunning = false)
+        saveGameRecord()
+    }
+
+    /**
+     * Сохраняет результат игры в базу данных
+     */
+    private fun saveGameRecord() {
+        val player = _currentPlayer.value
+        if (player == null || player.id == 0L) {
+            // Игрок не выбран или не сохранен в БД
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                val record = GameRecordEntity(
+                    playerId = player.id,
+                    score = gameState.score,
+                    accuracy = gameState.accuracy,
+                    hitCount = gameState.hitCount,
+                    missCount = gameState.missCount,
+                    difficultyLevel = gameState.gameSettings.difficultyLevel,
+                    gameSpeed = gameState.gameSettings.gameSpeed,
+                    maxCockroaches = gameState.gameSettings.maxCockroaches,
+                    roundDuration = gameState.gameSettings.roundDuration
+                )
+                repository.insertGameRecord(record)
+            } catch (e: Exception) {
+                // Логируем ошибку, но не прерываем игру
+                e.printStackTrace()
+            }
+        }
     }
 }

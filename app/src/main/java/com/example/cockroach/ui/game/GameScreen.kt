@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -109,6 +110,37 @@ fun GameScreen(
                             )
                         }
                     }
+                }
+
+                // Отрисовка бонуса
+                gameState.bonus?.let { bonus ->
+                    if (bonus.isActive) {
+                        Box(
+                            modifier = Modifier
+                                .offset(
+                                    x = with(density) { bonus.position.x.toDp() },
+                                    y = with(density) { bonus.position.y.toDp() }
+                                )
+                        ) {
+                            BonusSprite(
+                                onClick = {
+                                    viewModel.onScreenClick(
+                                        Offset(
+                                            bonus.position.x + 32f,
+                                            bonus.position.y + 32f
+                                        )
+                                    )
+                                }
+                            )
+                        }
+                    }
+                }
+
+                // Индикатор режима наклона
+                if (gameState.isTiltModeActive) {
+                    TiltModeIndicator(
+                        timeRemaining = ((gameState.tiltModeEndTime - System.currentTimeMillis()) / 1000f).coerceAtLeast(0f)
+                    )
                 }
 
                 // Экран паузы
@@ -273,6 +305,40 @@ private fun PauseScreen(onResume: () -> Unit) {
                 Button(onClick = onResume) {
                     Text("Продолжить")
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TiltModeIndicator(timeRemaining: Float) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .alpha(0.6f),
+        contentAlignment = Alignment.TopCenter
+    ) {
+        Card(
+            shape = RoundedCornerShape(12.dp)
+        ) {
+            Row(
+                modifier = Modifier
+                    .background(Color(0xFFFF6B35))
+                    .padding(horizontal = 16.dp, vertical = 8.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = "📱",
+                    fontSize = 20.sp
+                )
+                Text(
+                    text = "Режим наклона активен: ${timeRemaining.toInt()}с",
+                    color = Color.White,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }

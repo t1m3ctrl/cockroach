@@ -14,9 +14,32 @@ data class Beetle(
     val isAlive: Boolean = true,
     val createdAt: Long = System.currentTimeMillis()
 ) {
-    fun updatePosition(deltaTime: Float, screenSize: IntSize, gameSpeed: Float = 1.0f): Beetle {
-        val newX = position.x + direction.x * type.speed * deltaTime * 100f * gameSpeed
-        val newY = position.y + direction.y * type.speed * deltaTime * 100f * gameSpeed
+    fun updatePosition(
+        deltaTime: Float,
+        screenSize: IntSize,
+        gameSpeed: Float = 1.0f,
+        tiltAcceleration: Offset = Offset.Zero
+    ): Beetle {
+        // Проверяем, активен ли режим наклона
+        val isTiltActive = tiltAcceleration != Offset.Zero
+
+        // Если наклон активен, гравитация доминирует над обычным движением
+        val movementX: Float
+        val movementY: Float
+
+        if (isTiltActive) {
+            // Режим наклона: гравитация полностью управляет движением
+            val tiltInfluence = 500f // Сильная гравитация
+            movementX = tiltAcceleration.x * tiltInfluence * deltaTime
+            movementY = tiltAcceleration.y * tiltInfluence * deltaTime
+        } else {
+            // Обычное движение
+            movementX = direction.x * type.speed * deltaTime * 100f * gameSpeed
+            movementY = direction.y * type.speed * deltaTime * 100f * gameSpeed
+        }
+
+        val newX = position.x + movementX
+        val newY = position.y + movementY
 
         val spriteWidth = 64f
         val spriteHeight = 80f

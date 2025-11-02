@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cockroach.data.model.GameSettings
 import com.example.cockroach.ui.authors.AuthorsScreen
@@ -44,8 +45,11 @@ import com.example.cockroach.ui.theme.Green40
  * В Android Activity - это экран приложения
  */
 class MainActivity : ComponentActivity() {
+    private lateinit var gameViewModel: GameViewModel
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        gameViewModel = ViewModelProvider(this)[GameViewModel::class.java]
 
         WindowCompat.getInsetsController(window, window.decorView).apply {
             hide(WindowInsetsCompat.Type.systemBars())
@@ -62,10 +66,22 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    override fun onPause() {
+        super.onPause()
+        gameViewModel.pauseGame()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        gameViewModel.resumeGame()
+    }
 }
 
 @Composable
-fun MainScreenWithTabs(modifier: Modifier = Modifier) {
+fun MainScreenWithTabs(
+    modifier: Modifier = Modifier
+) {
     var selectedTabIndex by remember { mutableIntStateOf(0) }
     var gameSettings by remember { mutableStateOf(GameSettings()) }
     val gameViewModel: GameViewModel = viewModel()
